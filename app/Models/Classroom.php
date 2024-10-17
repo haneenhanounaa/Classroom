@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Models\Scopes\UserClassroomScope;
 use App\Observers\ClassroomObserver;
+use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +47,37 @@ class Classroom extends Model
 
 
     }
+    //1 to many Relationship
+    public function classworks():HasMany{
+        return $this->hasMany(Classwork::class,'classroom_id','id');
+    }
 
+    public function topics():HasMany{
+        return $this->hasMany(Topic::class,'classroom_id','id');
+    }
+
+    //many to many Relationship
+    public function users(){
+        return $this->belongsToMany(
+            User::class,    //Related model
+        'classroom_user',  //pivot table
+        'classroom_id',   //FK for current model in the pivot table
+        'user_id',       //FK for related model in the pivot table
+        'id',           //PK for current model
+        'id'           //PK for related model
+    )->withPivot('role','created_at')
+    // ->as('join')
+    ;
+    }
+
+    public function teatchers(){
+        return $this->users()->wherePivot('role','=','teacher');
+    }
+
+    public function students(){
+        return $this->users()->wherePivot('role','=','student');
+    }
+ 
     //local scopes
     public function scopeActive(Builder $query)
     {
@@ -61,14 +93,33 @@ class Classroom extends Model
         $query->where('status','=',$status);
     }
 
-    public function join($user_id,$role='student'){
-       return DB::table('classroom_user')->insert([
-            'classroom_id' => $this->id,
-            'user_id' => $user_id,
-            'role' => $role,
-            'created_at' => now(),
-        ]);
+    // public function join($user_id,$role='student'){
+    //    return DB::table('classroom_user')->insert([
+    //         'classroom_id' => $this->id,
+    //         'user_id' => $user_id,
+    //         'role' => $role,
+    //         'created_at' => now(),
+    //     ]);
+    // }
+
+      public function join($user_id,$role='student'){
+
+        $exist= $this->users()->where('id','=',$user_id)->exists();
+
+        if($exist){
+            throw new Exception('User already joined the classroom');
+        }
+        return $this->users()->attach($user_id,[
+            'role'=>$role,
+            'created_at'=>now(),
+    
+    ]);
+       
     }
+
+
+
+
 
     public function getNameAttribute($value){
             return strtoupper($value);
@@ -94,6 +145,13 @@ class Classroom extends Model
         return route('classrooms.show',$this->id);
      }
 
+     public function createdClassrooms(){
+        return $this->hasMany(Classroom::class,'user_id');
+    }
+
+
+
+     
 
 }
 

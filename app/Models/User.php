@@ -47,4 +47,37 @@ class User extends Authenticatable
 
             $this->attributes['email']=ucfirst( ($value));
     }
+    //
+
+    //many to many Relationship 
+    public function classrooms(){
+        return $this->belongsToMany(
+            Classroom::class,    //Related model
+        'classroom_user',  //pivot table
+        'user_id',   //FK for current model in the pivot table
+        'classroom_id',       //FK for related model in the pivot table
+        'id',           //PK for current model
+        'id'           //PK for related model
+    )->withPivot('role','created_at')
+    // ->as('join')
+    ;
+    }
+    //one to many (userOwner)
+    public function createdClassrooms(){
+        return $this->hasMany(Classroom::class,'user_id');
+    }
+
+    public function classworks(){
+    
+     return $this->belongsToMany(Classwork::class)->withPivot(['grade','submitted_at','status','created_at'])->using(ClassworkUser::class);
+       
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function submissions(){
+        return $this->hasMany(Submission::class);
+    }
 }

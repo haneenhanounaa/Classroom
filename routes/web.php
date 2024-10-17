@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\ClassroomPeopleController;
 use App\Http\Controllers\ClassroomsController;
+use App\Http\Controllers\ClassworkController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\TopicsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,12 +54,32 @@ Route::middleware(['auth'])->group(function(){
      Route::post('/classrooms/{classroom}/join',[JoinClassroomController::class,'store'])->name('classrooms.store');
 
     
-    Route::resource('/classrooms',ClassroomsController::class)->names([
-        // 'index'=>'classrooms/index'
-    ])->where([
-        'classroom'=>'\d+'
+    // Route::resource('/classrooms',ClassroomsController::class)->names([
+    //     // 'index'=>'classrooms/index'
+    // ])->where([
+    //     'classroom'=>'\d+'
+    // ]);
+
+    Route::resources([
+        'topics'=>TopicsController::class,
+        'classrooms'=>ClassroomsController::class,
+
     ]);
-   
+    Route::resource('classrooms.classworks',ClassworkController::class);
+
+    
+
+    Route::get('/classrooms/{classroom}/people', [ClassroomPeopleController::class,'index'])->name('classrooms.people');
+
+    Route::delete('/classrooms/{classroom}/people', [ClassroomPeopleController::class,'destroy'])->name('classrooms.people.destroy');
+
+    Route::post('comments',[CommentController::class,'store'])->name('comments.store');
+
+    Route::post('classworks/{classwork}/submissions',[SubmissionController::class,'store'])->name('submissions.store');
+
+    Route::get('submissions/{submission}/file',[SubmissionController::class,'file'])->name('submissions.file');
 });
+
+
 
 

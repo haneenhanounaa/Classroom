@@ -20,6 +20,7 @@
            
         
         <form action='{{route("classrooms.store")}}' method='post' enctype="multipart/form-data">
+          
         <!--<input type="hidden" name="_token" value="{{csrf_token()}}" >
         -->
         @csrf
