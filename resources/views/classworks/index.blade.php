@@ -2,8 +2,9 @@
   <div class="container">
     <h1>{{ $classroom->name }} (#{{ $classroom->id }})</h1>
     <h3>{{ $classroom->section }}</h3>
+  
     <hr>
-
+    @can('classworks.create',[$classroom])
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
         + Create
@@ -14,6 +15,7 @@
         <li><a class="dropdown-item" href="{{ route('classrooms.classworks.create', [$classroom->id, 'type' => 'question']) }}">Question</a></li>
       </ul>
     </div>
+    @endcan
 
     <hr>
 

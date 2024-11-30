@@ -11,10 +11,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
+use Illuminate\Support\Facades\Gate;
+
 
 class SubmissionController extends Controller
 {
     public function store(Request $request,Classwork $classwork){
+
+        
+            Gate::authorize('submissions.create',[$classwork]);
 
             $request->validate([
                 'files'=>'required|array',

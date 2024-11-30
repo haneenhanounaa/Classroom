@@ -8,6 +8,7 @@ use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\TopicsController;
+use App\Http\Middleware\ApplyUserPreferences;
 use Illuminate\Support\Facades\Route;
 
 /*

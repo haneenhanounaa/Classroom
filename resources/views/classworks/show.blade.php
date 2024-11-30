@@ -54,6 +54,7 @@
         
         <!-- Right Column (col-md-4) -->
         <div class="col-md-4">
+          @can('submissions.create',[$classwork])
             <div class="bordered rounded p-3 bg-light">
               <h4>Submission</h4>
 
@@ -77,6 +78,7 @@
               @endif
 
             </div>
+          @endcan  
         </div>
     </div>
   </div>  

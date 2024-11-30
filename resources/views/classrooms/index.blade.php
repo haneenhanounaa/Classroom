@@ -1,9 +1,9 @@
 
-<x-main-layout title="Classrooms">
+<x-main-layout :title="__('Classrooms')">
   
     <div class="container">
 
-        <h1> Classrooms</h1>
+        <h1> {{__('Classrooms')}}</h1>
         <!-- رح يعرض يلي داخل ملف الالرت  -->
       
         <x-alert name="success" id="success" class="alert-success"/>
@@ -22,13 +22,13 @@
             <h5 class="card-title">{{$classroom->name}}</h5>
               <p class="card-text">{{$classroom->section}}-{{$classroom->room}}</p>
             <div class="d-flex justify-content-between">
-            <a href="{{$classroom->url}}" class="btn btn-sm btn-primary">View</a>
+            <a href="{{$classroom->url}}" class="btn btn-sm btn-primary">{{__('View')}}</a>
             <a href="{{route('classrooms.edit',$classroom->id)}}" class="btn btn-sm btn-dark">Edit</a>
 
             <form action="{{ route('classrooms.destroy', $classroom->id) }}" method="post">
                 @csrf
                 @method('delete')
-                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                <button type="submit" class="btn btn-sm btn-danger">{{__('Delete')}}</button>
           </form>
         </div>  
           </div>

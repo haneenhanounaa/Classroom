@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -53,11 +55,11 @@ class User extends Authenticatable
     public function classrooms(){
         return $this->belongsToMany(
             Classroom::class,    //Related model
-        'classroom_user',  //pivot table
-        'user_id',   //FK for current model in the pivot table
-        'classroom_id',       //FK for related model in the pivot table
-        'id',           //PK for current model
-        'id'           //PK for related model
+            'classroom_user',  //pivot table
+            'user_id',   //FK for current model in the pivot table
+            'classroom_id',       //FK for related model in the pivot table
+            'id',           //PK for current model
+             'id'           //PK for related model
     )->withPivot('role','created_at')
     // ->as('join')
     ;
@@ -80,4 +82,9 @@ class User extends Authenticatable
     public function submissions(){
         return $this->hasMany(Submission::class);
     }
+
+    public function profile(){
+        return $this->hasOne(Profile::class,'user_id','id')->withDefault();
+    }
+
 }
